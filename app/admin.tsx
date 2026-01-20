@@ -48,7 +48,7 @@ export default function AdminScreen() {
     updateCustomFieldTemplate,
     deleteCustomFieldTemplate,
     machines,
-    updateMachine,
+    updateMachineFromAdmin,
     getClient,
     addCheckpointTemplate,
     updateCheckpointTemplate,
@@ -416,7 +416,7 @@ export default function AdminScreen() {
                     <Text style={styles.subsectionTitle}>Champs en base de données ({customFieldTemplates.length})</Text>
                     {customFieldTemplates.map((field) => {
                       const machinesWithField = machines.filter(m => 
-                        m.customFields?.some(cf => cf.key === field.key)
+                        m.customFields?.some((cf: { key: string }) => cf.key === field.key)
                       ).length;
                       const machinesWithoutField = machines.length - machinesWithField;
                       
@@ -818,7 +818,7 @@ export default function AdminScreen() {
           visible={!!editingMachine}
           machine={editingMachine}
           onClose={() => setEditingMachine(null)}
-          onUpdate={updateMachine}
+          onUpdate={updateMachineFromAdmin}
           customFieldTemplates={customFieldTemplates}
         />
         <AddFieldToAllMachinesModal
@@ -826,7 +826,7 @@ export default function AdminScreen() {
           field={addingFieldToAll}
           onClose={() => setAddingFieldToAll(null)}
           machines={machines}
-          onUpdate={updateMachine}
+          onUpdate={updateMachineFromAdmin}
         />
         <DeleteDataModal
           visible={showDeleteDataModal}

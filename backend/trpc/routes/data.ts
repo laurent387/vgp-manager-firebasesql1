@@ -58,7 +58,7 @@ export const dataRouter = createTRPCRouter({
 
   getUsers: publicProcedure.query(async () => {
     const result = await query<any>(
-      `SELECT id, email, role, client_id, nom, prenom, qualifications, is_active, created_at
+      `SELECT id, email, role, client_id, nom, prenom, qualifications, is_active, created_at, activation_token, activation_token_expiry
        FROM users 
        ORDER BY created_at DESC`
     );
@@ -73,6 +73,8 @@ export const dataRouter = createTRPCRouter({
       qualifications: row.qualifications || [],
       isActive: row.is_active,
       createdAt: row.created_at,
+      activationToken: row.activation_token,
+      activationTokenExpiry: row.activation_token_expiry,
     }));
   }),
 
