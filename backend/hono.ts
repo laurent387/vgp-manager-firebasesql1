@@ -15,6 +15,10 @@ app.use("*", cors({
 }));
 
 app.onError((err, c) => {
+  if (c.req.path.startsWith('/api/trpc')) {
+    console.error('[Hono] tRPC error (letting tRPC handle it):', err.message);
+    throw err;
+  }
   console.error('[Hono] Error:', err);
   return c.json(
     {
@@ -33,9 +37,6 @@ app.use(
     endpoint: '/api/trpc',
     router: appRouter,
     createContext,
-    onError({ error, path }) {
-      console.error('[tRPC] Error on path:', path, error);
-    },
   }),
 );
 
