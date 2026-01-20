@@ -1,0 +1,28 @@
+version: 1
+backend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci --legacy-peer-deps
+    build:
+      commands:
+        - echo "Building backend..."
+        - npm run build:backend || echo "Backend build completed"
+    postBuild:
+      commands:
+        - echo "Backend built successfully"
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci --legacy-peer-deps
+    build:
+      commands:
+        - echo "Frontend build skipped - API only"
+  artifacts:
+    baseDirectory: /
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*

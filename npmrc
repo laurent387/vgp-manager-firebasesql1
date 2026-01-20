@@ -1,0 +1,3 @@
+cache=/aws/mde/mde/.npm-cache
+tmp=/aws/mde/mde/.npm-tmp
+prefix=/aws/mde/mde/.npm-global
