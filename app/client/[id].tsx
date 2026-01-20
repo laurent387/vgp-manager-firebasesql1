@@ -831,7 +831,7 @@ function PlanControlModal({
                         <Text style={styles.controleurEmail}>{controleur.email}</Text>
                         {controleur.qualifications && controleur.qualifications.length > 0 && (
                           <Text style={styles.controleurQualifications}>
-                            {controleur.qualifications.map((q) => q.name).join(', ')}
+                            {controleur.qualifications.map((q: { id: string; name: string }) => q.name).join(', ')}
                           </Text>
                         )}
                       </View>
