@@ -299,8 +299,21 @@ export const [DataProvider, useData] = createContextHook(() => {
   const getMachine = (id: string) => machines.find(m => m.id === id);
   const getEventsByController = (controllerId: string) => scheduledEvents.filter(e => e.technicienId === controllerId);
   const getEventsByClient = (clientId: string) => scheduledEvents.filter(e => e.clientId === clientId);
-  const getVGPHistoryByMachine = (machineId: string) => [];
-  const getObservationsByInspection = (inspectionId: string) => [];
+  const getVGPHistoryByMachine = (machineId: string): VGPHistory[] => [];
+  const getObservationsByInspection = (inspectionId: string): ReportObservation[] => [];
+  
+  const addCustomFieldToMachine = async (machineId: string, field: { key: string; label: string; type: 'text' | 'number' | 'date' | 'photo' | 'pdf'; value?: string }) => {
+    const machine = machines.find(m => m.id === machineId);
+    if (!machine) throw new Error('Machine not found');
+    
+    const newField = {
+      id: `cf_${Date.now()}`,
+      ...field,
+    };
+    
+    const updatedCustomFields = [...(machine.customFields || []), newField];
+    await updateMachine({ ...machine, customFields: updatedCustomFields });
+  };
 
   return {
     loading,
@@ -325,6 +338,7 @@ export const [DataProvider, useData] = createContextHook(() => {
     getEventsByClient,
     getVGPHistoryByMachine,
     getObservationsByInspection,
+    addCustomFieldToMachine,
     addClient,
     updateClient,
     deleteClient,

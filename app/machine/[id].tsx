@@ -14,7 +14,7 @@ import {
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useAuth } from '@/providers/AuthProvider';
 import { useData } from '@/providers/DataProvider';
-import { ChecklistItem } from '@/types';
+import { ChecklistItem, CustomField } from '@/types';
 import DatePickerInput from '@/components/DatePickerInput';
 import { APP_COLORS, VGP_COLORS, DEFAULT_PERIODICITY } from '@/constants/vgp';
 import { getVGPStatus, getDaysUntilVGP, calculateNextVGP, formatDate } from '@/utils/vgp';
@@ -192,7 +192,7 @@ export default function MachineDetailScreen() {
               <Wrench size={20} color={APP_COLORS.primary} />
               <Text style={styles.sectionTitle}>Champs personnalisés</Text>
             </View>
-            {machine.customFields.map((field) => {
+            {machine.customFields.map((field: CustomField) => {
               if (field.type === 'photo' && field.value) {
                 return (
                   <View key={field.id} style={styles.customFieldContainer}>
@@ -415,7 +415,7 @@ export default function MachineDetailScreen() {
                         
                         <View style={styles.checklistSection}>
                           <Text style={styles.checklistTitle}>Points de contrôle</Text>
-                          {history.checklist.map((item) => (
+                          {(history.checklist || []).map((item) => (
                             <View key={item.id} style={styles.checklistItemRow}>
                               <View style={styles.checklistItemLeft}>
                                 {item.reponse === 'oui' && (
@@ -675,6 +675,7 @@ function EditMachineModal({
   onClose: () => void;
   machine: {
     id: string;
+    clientId: string;
     dateMiseEnService: string;
     numeroSerie: string;
     constructeur: string;
@@ -682,6 +683,7 @@ function EditMachineModal({
     typeMachine: 'mobile' | 'fixe' | 'presse_plieuse';
     dateDerniereVGP?: string;
     observations?: string;
+    customFields?: { id: string; key: string; label: string; type: 'text' | 'number' | 'date' | 'photo' | 'pdf'; value?: string }[];
   };
 }) {
   const { updateMachine } = useData();
@@ -707,7 +709,8 @@ function EditMachineModal({
         ? calculateNextVGP(dateDerniereVGP, periodicite)
         : undefined;
 
-      await updateMachine(machine.id, {
+      await updateMachine({
+        ...machine,
         dateMiseEnService,
         numeroSerie,
         constructeur,
@@ -1071,10 +1074,10 @@ function LastVGPReportModal({
   vgpHistory: {
     id: string;
     dateControl: string;
-    technicienEmail: string;
-    checklist: ChecklistItem[];
-    observations: string;
-    conforme: boolean;
+    technicienEmail?: string;
+    checklist?: ChecklistItem[];
+    observations?: string;
+    conforme?: boolean;
     protectionDevices?: {
       boutonsArret: boolean;
       protecteursFixes: boolean;
@@ -1183,7 +1186,7 @@ function LastVGPReportModal({
 
             <View style={styles.reportSection}>
               <Text style={styles.reportSectionTitle}>Points de contrôle</Text>
-              {vgpHistory.checklist.map((item, index) => (
+              {(vgpHistory.checklist || []).map((item, index) => (
                 <View key={item.id} style={styles.reportChecklistItem}>
                   <View style={styles.reportChecklistHeader}>
                     <Text style={styles.reportChecklistNumber}>{index + 1}.</Text>
