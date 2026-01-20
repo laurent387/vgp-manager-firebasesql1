@@ -301,6 +301,7 @@ export const [DataProvider, useData] = createContextHook(() => {
   const getEventsByClient = (clientId: string) => scheduledEvents.filter(e => e.clientId === clientId);
   const getVGPHistoryByMachine = (machineId: string): VGPHistory[] => [];
   const getObservationsByInspection = (inspectionId: string): ReportObservation[] => [];
+  const getInspectionsByReport = (reportId: string): ReportInspection[] => [];
   
   const addCustomFieldToMachine = async (machineId: string, field: { key: string; label: string; type: 'text' | 'number' | 'date' | 'photo' | 'pdf'; value?: string }) => {
     const machine = machines.find(m => m.id === machineId);
@@ -338,6 +339,7 @@ export const [DataProvider, useData] = createContextHook(() => {
     getEventsByClient,
     getVGPHistoryByMachine,
     getObservationsByInspection,
+    getInspectionsByReport,
     addCustomFieldToMachine,
     addClient,
     updateClient,
