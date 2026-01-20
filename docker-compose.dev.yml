@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: vgp-api-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app/backend:ro
+      - ./package.json:/app/package.json:ro
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DB_HOST=${DB_HOST:-localhost}
+      - DB_PORT=${DB_PORT:-3306}
+      - DB_NAME=${DB_NAME:-vgpdb}
+      - DB_USER=${DB_USER:-root}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - LOG_LEVEL=debug
+    networks:
+      - vgp-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: vgp-mysql-dev
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:-rootpassword}
+      - MYSQL_DATABASE=${DB_NAME:-vgpdb}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./backend/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    networks:
+      - vgp-network
+
+volumes:
+  mysql_data:
+
+networks:
+  vgp-network:
+    driver: bridge
