@@ -376,9 +376,9 @@ export const [DataProvider, useData] = createContextHook(() => {
       await customFieldTemplatesQuery.refetch();
       return customFieldTemplates[customFieldTemplates.length - 1];
     },
-    importReport: async (payload: any, onProgress: (progress: number) => void) => {
-      onProgress(100);
-      return { logs: [] };
+    importReport: async (payload: any, replaceExisting: boolean = false) => {
+      console.log('[DataProvider] importReport called, replaceExisting:', replaceExisting);
+      return { logs: [] as string[] };
     },
     deleteCustomFieldTemplate,
     addScheduledEvent,
