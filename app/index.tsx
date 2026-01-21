@@ -10,6 +10,8 @@ import {
   Alert,
   Image,
   ScrollView,
+  useWindowDimensions,
+  Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/providers/AuthProvider';
@@ -23,6 +25,10 @@ export default function LoginScreen() {
   const [logoFailed, setLogoFailed] = useState<boolean>(false);
   const { login } = useAuth();
   const router = useRouter();
+  const { width, height } = useWindowDimensions();
+  
+  const isSmallScreen = height < 700;
+  const isLargeScreen = width > 500;
 
   React.useEffect(() => {
     console.log('[Login] Using GROUPE_ADF_LOGO uri:', GROUPE_ADF_LOGO);
@@ -49,21 +55,31 @@ export default function LoginScreen() {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior="padding"
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView 
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[
+          styles.scrollContent,
+          isSmallScreen && styles.scrollContentSmall,
+        ]}
         keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
       >
-        <View style={styles.content}>
-          <View style={styles.heroHeader} testID="login-hero-header">
+        <View style={[
+          styles.content,
+          isLargeScreen && styles.contentLarge,
+        ]}>
+          <View style={[
+            styles.heroHeader,
+            isSmallScreen && styles.heroHeaderSmall,
+          ]} testID="login-hero-header">
             <View style={styles.heroDecorA} />
             <View style={styles.heroDecorB} />
             {!logoFailed ? (
               <Image
                 testID="groupe-adf-logo"
                 source={{ uri: GROUPE_ADF_LOGO }}
-                style={styles.logo}
+                style={[styles.logo, isSmallScreen && styles.logoSmall]}
                 resizeMode="contain"
                 onLoad={() => {
                   console.log('[Login] Logo loaded successfully', { uri: GROUPE_ADF_LOGO });
@@ -81,10 +97,13 @@ export default function LoginScreen() {
                 <Text style={styles.logoFallbackText}>VGP</Text>
               </View>
             )}
-            <Text style={styles.title}>VGP Manager</Text>
+            <Text style={[styles.title, isSmallScreen && styles.titleSmall]}>VGP Manager</Text>
           </View>
 
-          <View style={styles.formCard} testID="login-form-card">
+          <View style={[
+            styles.formCard,
+            isLargeScreen && styles.formCardLarge,
+          ]} testID="login-form-card">
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Email</Text>
               <TextInput
@@ -131,16 +150,6 @@ export default function LoginScreen() {
                 </>
               )}
             </TouchableOpacity>
-
-            <View style={styles.demoInfo} testID="demo-accounts">
-              <Text style={styles.demoTitle}>Comptes de démonstration :</Text>
-              <Text style={styles.demoText}>
-                Admin: admin@vgp.fr / admin123
-              </Text>
-              <Text style={styles.demoText}>
-                Client: client@test.fr / client123
-              </Text>
-            </View>
           </View>
         </View>
       </ScrollView>
@@ -156,20 +165,30 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     justifyContent: 'center',
-    paddingVertical: 28,
+    paddingVertical: 32,
+    paddingHorizontal: 4,
+  },
+  scrollContentSmall: {
+    paddingVertical: 16,
   },
   content: {
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
+    maxWidth: 480,
+    width: '100%',
+    alignSelf: 'center',
+  },
+  contentLarge: {
+    paddingHorizontal: 32,
   },
   heroHeader: {
     alignItems: 'center',
-    paddingTop: 16,
-    paddingBottom: 22,
-    paddingHorizontal: 16,
-    marginBottom: 18,
-    borderRadius: 22,
+    paddingTop: 24,
+    paddingBottom: 28,
+    paddingHorizontal: 20,
+    marginBottom: 24,
+    borderRadius: 24,
     backgroundColor: '#0A2540',
     overflow: 'hidden',
     shadowColor: '#000',
@@ -177,6 +196,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.35,
     shadowRadius: 22,
     elevation: 16,
+  },
+  heroHeaderSmall: {
+    paddingTop: 16,
+    paddingBottom: 18,
+    marginBottom: 16,
   },
   heroDecorA: {
     position: 'absolute',
@@ -197,14 +221,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(16, 185, 129, 0.18)',
   },
   logo: {
-    width: 260,
-    height: 86,
-    marginBottom: 14,
+    width: 240,
+    height: 80,
+    marginBottom: 16,
+  },
+  logoSmall: {
+    width: 200,
+    height: 66,
+    marginBottom: 10,
   },
   logoFallback: {
-    width: 260,
-    height: 86,
-    marginBottom: 14,
+    width: 240,
+    height: 80,
+    marginBottom: 16,
     borderRadius: 18,
     backgroundColor: 'rgba(255,255,255,0.08)',
     borderWidth: 1,
@@ -219,18 +248,21 @@ const styles = StyleSheet.create({
     letterSpacing: 1.8,
   },
   title: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: '800' as const,
     color: '#FFFFFF',
-    marginBottom: 6,
+    marginBottom: 4,
     letterSpacing: -0.4,
+  },
+  titleSmall: {
+    fontSize: 22,
   },
 
   formCard: {
     width: '100%',
-    backgroundColor: 'rgba(255,255,255,0.96)',
+    backgroundColor: 'rgba(255,255,255,0.98)',
     borderRadius: 20,
-    padding: 18,
+    padding: 24,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.12)',
     shadowColor: '#000',
@@ -239,8 +271,11 @@ const styles = StyleSheet.create({
     shadowRadius: 18,
     elevation: 12,
   },
+  formCardLarge: {
+    padding: 32,
+  },
   inputContainer: {
-    marginBottom: 20,
+    marginBottom: 18,
   },
   label: {
     fontSize: 14,
@@ -260,46 +295,26 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: APP_COLORS.primary,
-    borderRadius: 16,
-    paddingVertical: 18,
+    borderRadius: 14,
+    paddingVertical: 16,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-    marginTop: 10,
+    marginTop: 8,
     shadowColor: '#0B1220',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.25,
-    shadowRadius: 18,
-    elevation: 10,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.22,
+    shadowRadius: 14,
+    elevation: 8,
   },
   buttonDisabled: {
     opacity: 0.6,
   },
   buttonText: {
     color: '#FFFFFF',
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: '700' as const,
     letterSpacing: 0.3,
-  },
-  demoInfo: {
-    marginTop: 16,
-    padding: 14,
-    backgroundColor: '#F0FDF4',
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: '#86EFAC',
-  },
-  demoTitle: {
-    fontSize: 14,
-    fontWeight: '700' as const,
-    color: '#065F46',
-    marginBottom: 10,
-  },
-  demoText: {
-    fontSize: 13,
-    color: '#047857',
-    marginBottom: 4,
-    fontWeight: '500' as const,
   },
 });
