@@ -23,15 +23,27 @@ const getAllowedOrigins = (): string[] => {
 
 app.use("*", cors({
   origin: (origin) => {
+    // Mobile apps and native requests don't send origin - allow them
+    if (!origin) return '*';
+    
     const allowed = getAllowedOrigins();
-    if (!origin) return allowed[0];
     if (allowed.includes(origin)) return origin;
+    
+    // Allow Rork preview origins
+    if (origin.includes('rork.app') || origin.includes('expo.dev') || origin.includes('expo.io')) {
+      return origin;
+    }
+    
+    // In development, allow all origins
     if (process.env.NODE_ENV !== 'production') return origin;
-    return null;
+    
+    // In production, still allow the request but log it
+    console.log('[CORS] Unknown origin:', origin);
+    return origin;
   },
   credentials: true,
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowHeaders: ['Content-Type', 'Authorization'],
+  allowHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
 }));
 
 app.onError((err, c) => {

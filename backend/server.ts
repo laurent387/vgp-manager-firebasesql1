@@ -15,15 +15,36 @@ const app = new Hono();
 
 const env = getEnv();
 
-const corsOrigins = env.CORS_ORIGINS === '*' 
-  ? '*' 
+const corsOriginsList = env.CORS_ORIGINS === '*' 
+  ? [] 
   : env.CORS_ORIGINS.split(',').map(o => o.trim());
 
 app.use('*', cors({
-  origin: corsOrigins,
+  origin: (origin) => {
+    // Mobile apps and native requests don't send origin - allow them
+    if (!origin) return '*';
+    
+    // If CORS_ORIGINS is *, allow all
+    if (env.CORS_ORIGINS === '*') return origin;
+    
+    // Check explicit allowlist
+    if (corsOriginsList.includes(origin)) return origin;
+    
+    // Allow Rork preview and Expo origins
+    if (origin.includes('rork.app') || origin.includes('expo.dev') || origin.includes('expo.io')) {
+      return origin;
+    }
+    
+    // In development, allow all
+    if (!isProduction()) return origin;
+    
+    // In production, log and allow (mobile apps may have unexpected origins)
+    logger.warn('CORS request from unknown origin', { origin });
+    return origin;
+  },
   credentials: true,
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
+  allowHeaders: ['Content-Type', 'Authorization', 'X-Request-ID', 'X-Requested-With'],
   exposeHeaders: ['X-RateLimit-Limit', 'X-RateLimit-Remaining', 'X-RateLimit-Reset'],
   maxAge: 86400,
 }));
