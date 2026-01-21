@@ -262,7 +262,7 @@ function generateClientReportHTML(
               <div class="checklist">
                 <strong>Points de contrôle:</strong>
                 <ul>
-                  ${h.checklist.map(item => `
+                  ${(h.checklist || []).map(item => `
                     <li class="checklist-item">
                       <span class="checklist-icon ${item.reponse === 'oui' ? 'icon-ok' : item.reponse === 'non' ? 'icon-nok' : 'icon-autre'}">
                         ${item.reponse === 'oui' ? '✓' : item.reponse === 'non' ? '✗' : '•'}

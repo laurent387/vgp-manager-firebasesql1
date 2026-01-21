@@ -1,6 +1,6 @@
 import createContextHook from '@nkzw/create-context-hook';
 import { useState, useEffect, useMemo } from 'react';
-import { Client, Machine, VGPHistory, CustomFieldTemplate, CheckpointTemplate, StoredUser, ScheduledEvent, Intervention, Part, TicketType, Report, ReportInspection, ReportObservation } from '@/types';
+import { Client, Machine, VGPHistory, CustomFieldTemplate, CheckpointTemplate, StoredUser, ScheduledEvent, Intervention, Part, TicketType, Report, ReportInspection, ReportObservation, ImportLog } from '@/types';
 import { trpc } from '@/lib/trpc';
 import { useAuth } from './AuthProvider';
 
@@ -378,7 +378,7 @@ export const [DataProvider, useData] = createContextHook(() => {
     },
     importReport: async (payload: any, replaceExisting: boolean = false) => {
       console.log('[DataProvider] importReport called, replaceExisting:', replaceExisting);
-      return { logs: [] as string[] };
+      return { logs: [] as ImportLog[] };
     },
     deleteCustomFieldTemplate,
     addScheduledEvent,

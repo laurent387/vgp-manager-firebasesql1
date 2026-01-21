@@ -747,6 +747,7 @@ function PlanControlModal({
             machineId,
             controllerId: selectedControleur,
             scheduledDate: plannedDate,
+            date: plannedDate,
             title: `Contrôle VGP - ${machine.constructeur} ${machine.modele}`,
             description: `Contrôleur: ${controleurName}\nN° série: ${machine.numeroSerie}`,
           });
@@ -903,7 +904,7 @@ function EditClientModal({
 
     setLoading(true);
     try {
-      await updateClient(client.id, { nom, adresse, contactNom, contactPrenom, contactEmail, contactTelephone });
+      await updateClient({ ...client, nom, adresse, contactNom, contactPrenom, contactEmail, contactTelephone });
       Alert.alert('Succès', 'Client modifié avec succès');
       onClose();
     } catch (error) {
