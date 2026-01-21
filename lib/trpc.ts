@@ -36,24 +36,22 @@ export const trpcClient = trpc.createClient({
     httpLink({
       url: `${baseUrl}/api/trpc`,
       transformer: superjson,
-      fetch: async (url, options) => {
+      async fetch(url, options) {
         console.log('[tRPC] Request:', url);
-        try {
-          const response = await fetch(url, options);
-          
-          // Check if response is JSON
-          const contentType = response.headers.get('content-type');
-          if (!contentType?.includes('application/json')) {
-            const text = await response.text();
-            console.error('[tRPC] Non-JSON response:', text.substring(0, 200));
-            throw new Error(`Server returned non-JSON response: ${contentType}`);
-          }
-          
-          return response;
-        } catch (error) {
-          console.error('[tRPC] Fetch error:', error);
-          throw error;
+        const response = await fetch(url, {
+          ...options,
+          headers: {
+            ...options?.headers,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        });
+        
+        if (!response.ok) {
+          console.error('[tRPC] Response not OK:', response.status, response.statusText);
         }
+        
+        return response;
       },
     }),
   ],
