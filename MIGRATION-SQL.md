@@ -16,7 +16,7 @@ L'application a été complètement refondue pour fonctionner avec un serveur SQ
 ### Frontend
 - **AuthProvider** : Authentification via tRPC avec AsyncStorage
 - **DataProvider** : Gestion des données via React Query et tRPC
-- **Suppression** : Amplify, Supabase, SurrealDB, SyncProvider
+- **Suppression** : Supabase, SurrealDB, SyncProvider
 
 ## Configuration requise
 
@@ -76,17 +76,15 @@ EOF
 - `backend/trpc/app-router.ts` - Ajout des nouveaux routers
 - `providers/AuthProvider.tsx` - Simplifié avec tRPC uniquement
 - `providers/DataProvider.tsx` - Simplifié avec tRPC uniquement
-- `app/_layout.tsx` - Suppression de SyncProvider et Amplify
+- `app/_layout.tsx` - Suppression de SyncProvider
 - `types/index.ts` - Types mis à jour
 
 ### À supprimer (optionnel)
 - `lib/supabase.ts`
-- `lib/amplify-config.ts`
 - `lib/database.ts` (ancien SurrealDB)
 - `lib/local-database.ts`
 - `lib/sync-service.ts`
 - `providers/SyncProvider.tsx`
-- `amplify/` (dossier complet)
 
 ## Prochaines étapes
 
