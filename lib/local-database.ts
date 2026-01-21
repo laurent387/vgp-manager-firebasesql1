@@ -392,7 +392,8 @@ class LocalDatabase {
   }[]> {
     if (!this.db) throw new Error('Database not initialized');
     return await this.db.getAllAsync(
-      `SELECT * FROM outbox WHERE status IN ('PENDING', 'ERROR') AND retries < 5 ORDER BY client_timestamp ASC`
+      `SELECT * FROM outbox WHERE status IN (?, ?) AND retries < ? ORDER BY client_timestamp ASC`,
+      ['PENDING', 'ERROR', 5]
     );
   }
 
@@ -413,7 +414,7 @@ class LocalDatabase {
 
   async clearAcknowledgedOutbox(): Promise<void> {
     if (!this.db) throw new Error('Database not initialized');
-    await this.db.runAsync(`DELETE FROM outbox WHERE status = 'ACK'`);
+    await this.db.runAsync(`DELETE FROM outbox WHERE status = ?`, ['ACK']);
     console.log('[LocalDB] Cleared acknowledged outbox events');
   }
 
