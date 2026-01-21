@@ -7,15 +7,21 @@ import type { AppRouter } from "@/backend/trpc/app-router";
 export const trpc = createTRPCReact<AppRouter>();
 
 const getBaseUrl = () => {
-  const url = process.env.EXPO_PUBLIC_RORK_API_BASE_URL;
-
-  if (!url) {
-    throw new Error(
-      "Rork did not set EXPO_PUBLIC_RORK_API_BASE_URL, please use support",
-    );
+  const customUrl = process.env.EXPO_PUBLIC_API_URL;
+  if (customUrl) {
+    return customUrl;
   }
 
-  return url;
+  const rorkUrl = process.env.EXPO_PUBLIC_RORK_API_BASE_URL;
+  if (rorkUrl) {
+    return rorkUrl;
+  }
+
+  if (__DEV__) {
+    return 'http://localhost:3000';
+  }
+
+  return 'https://api.in-spectra.com';
 };
 
 export const trpcClient = trpc.createClient({
