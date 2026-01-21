@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="VGP Manager - Solution de gestion des Vérifications Générales Périodiques pour les professionnels du terrain. Conformité, traçabilité, efficacité.">
+  <meta name="theme-color" content="#1E3A5F">
+  <title>VGP Manager | Gestion des Vérifications Générales Périodiques</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1E3A5F;
+      --primary-light: #2C5282;
+      --secondary: #10B981;
+      --accent: #86BC25;
+      --dark-blue: #0A2540;
+      --background: #FFFFFF;
+      --background-light: #F8FAFC;
+      --border: #E5E7EB;
+      --text: #111827;
+      --text-secondary: #6B7280;
+      --text-light: #9CA3AF;
+      --error: #DC2626;
+      --warning: #F59E0B;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text);
+      background: var(--background);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .header.scrolled {
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 72px;
+    }
+
+    .logo {
+      height: 44px;
+      width: auto;
+    }
+
+    .header-cta {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: var(--radius-lg);
+      font-weight: 600;
+      font-size: 15px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 14px rgba(30,58,95,0.25);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(30,58,95,0.3);
+    }
+
+    .btn-secondary {
+      background: var(--background-light);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--border);
+    }
+
+    .btn-accent {
+      background: var(--secondary);
+      color: white;
+      box-shadow: 0 4px 14px rgba(16,185,129,0.25);
+    }
+
+    .btn-accent:hover {
+      background: #0D9668;
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .btn-outline:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-sm {
+      padding: 10px 18px;
+      font-size: 14px;
+    }
+
+    .btn-lg {
+      padding: 16px 32px;
+      font-size: 17px;
+      border-radius: var(--radius-xl);
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, var(--dark-blue) 0%, var(--primary) 100%);
+      padding: 140px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -80px;
+      width: 400px;
+      height: 400px;
+      background: rgba(134,188,37,0.15);
+      border-radius: 50%;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -150px;
+      left: -100px;
+      width: 500px;
+      height: 500px;
+      background: rgba(16,185,129,0.12);
+      border-radius: 50%;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 24px;
+    }
+
+    .hero-badge-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--secondary);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .hero h1 {
+      font-size: clamp(32px, 6vw, 56px);
+      font-weight: 800;
+      color: white;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+    }
+
+    .hero-subtitle {
+      font-size: clamp(16px, 2.5vw, 20px);
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 48px;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+
+    .hero-stat {
+      text-align: center;
+    }
+
+    .hero-stat-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-stat-label {
+      font-size: 14px;
+      color: rgba(255,255,255,0.7);
+      font-weight: 500;
+    }
+
+    /* Features Section */
+    .features {
+      padding: 100px 0;
+      background: var(--background-light);
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 60px;
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .section-subtitle {
+      font-size: 17px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .feature-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .feature-icon svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .feature-icon.blue {
+      background: #EFF6FF;
+      color: var(--primary);
+    }
+
+    .feature-icon.green {
+      background: #ECFDF5;
+      color: var(--secondary);
+    }
+
+    .feature-icon.lime {
+      background: #F7FEE7;
+      color: var(--accent);
+    }
+
+    .feature-icon.amber {
+      background: #FEF3C7;
+      color: var(--warning);
+    }
+
+    .feature-icon.red {
+      background: #FEE2E2;
+      color: var(--error);
+    }
+
+    .feature-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .feature-desc {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Platform Section */
+    .platform {
+      padding: 100px 0;
+      background: white;
+    }
+
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-top: 48px;
+    }
+
+    .platform-card {
+      background: var(--background-light);
+      border-radius: var(--radius-xl);
+      padding: 40px 32px;
+      text-align: center;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .platform-card:hover {
+      border-color: var(--primary);
+      background: white;
+    }
+
+    .platform-card.featured {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--dark-blue) 100%);
+      color: white;
+    }
+
+    .platform-card.featured .platform-title,
+    .platform-card.featured .platform-desc {
+      color: white;
+    }
+
+    .platform-card.featured .platform-desc {
+      opacity: 0.85;
+    }
+
+    .platform-icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 24px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      box-shadow: var(--shadow-md);
+    }
+
+    .platform-icon svg {
+      width: 36px;
+      height: 36px;
+      color: var(--primary);
+    }
+
+    .platform-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .platform-desc {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .platform-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 16px;
+    }
+
+    .platform-status.coming {
+      color: var(--warning);
+    }
+
+    /* Trust Section */
+    .trust {
+      padding: 100px 0;
+      background: var(--dark-blue);
+    }
+
+    .trust .section-title {
+      color: white;
+    }
+
+    .trust .section-subtitle {
+      color: rgba(255,255,255,0.7);
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 32px;
+      margin-top: 60px;
+    }
+
+    .trust-item {
+      text-align: center;
+      padding: 32px 24px;
+    }
+
+    .trust-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .trust-icon svg {
+      width: 32px;
+      height: 32px;
+      color: var(--accent);
+    }
+
+    .trust-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 10px;
+    }
+
+    .trust-desc {
+      font-size: 15px;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.6;
+    }
+
+    /* CTA Section */
+    .cta {
+      padding: 100px 0;
+      background: linear-gradient(135deg, var(--background-light) 0%, white 100%);
+    }
+
+    .cta-box {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 60px 40px;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .cta-title {
+      font-size: clamp(24px, 4vw, 32px);
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .cta-subtitle {
+      font-size: 17px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--text);
+      padding: 60px 0 32px;
+    }
+
+    .footer-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 40px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .footer-brand {
+      max-width: 300px;
+    }
+
+    .footer-logo {
+      height: 40px;
+      margin-bottom: 16px;
+      filter: brightness(0) invert(1);
+    }
+
+    .footer-desc {
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.7;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 60px;
+      flex-wrap: wrap;
+    }
+
+    .footer-col h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col li {
+      margin-bottom: 10px;
+    }
+
+    .footer-col a {
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .footer-col a:hover {
+      color: white;
+    }
+
+    .footer-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding-top: 32px;
+    }
+
+    .footer-copyright {
+      font-size: 14px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-legal a {
+      font-size: 14px;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .footer-legal a:hover {
+      color: white;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .header-cta .btn-secondary {
+        display: none;
+      }
+
+      .hero {
+        padding: 120px 0 60px;
+      }
+
+      .hero-stats {
+        gap: 32px;
+      }
+
+      .hero-cta {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .hero-cta .btn {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .features, .platform, .trust, .cta {
+        padding: 60px 0;
+      }
+
+      .platform-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-top {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-brand {
+        max-width: 100%;
+      }
+
+      .footer-links {
+        justify-content: center;
+        gap: 40px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .cta-box {
+        padding: 40px 24px;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate {
+      animation: fadeInUp 0.6s ease forwards;
+      opacity: 0;
+    }
+
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="container">
+      <div class="header-inner">
+        <img src="https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/1ax0vz9j4kid8s8ic3tbi" alt="Groupe ADF" class="logo">
+        <div class="header-cta">
+          <a href="#platforms" class="btn btn-secondary btn-sm">Télécharger</a>
+          <a href="https://app.in-spectra.com" class="btn btn-primary btn-sm">Accéder à l'app</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge animate">
+          <span class="hero-badge-dot"></span>
+          Solution professionnelle B2B
+        </div>
+        <h1 class="animate delay-1">Gérez vos <span>VGP</span> en toute simplicité</h1>
+        <p class="hero-subtitle animate delay-2">
+          La solution complète pour les Vérifications Générales Périodiques. 
+          Conformité réglementaire, traçabilité terrain, rapports automatisés.
+        </p>
+        <div class="hero-cta animate delay-3">
+          <a href="https://app.in-spectra.com" class="btn btn-accent btn-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+            Application web
+          </a>
+          <a href="#platforms" class="btn btn-outline btn-lg" style="color: white; border-color: rgba(255,255,255,0.4);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+            Application mobile
+          </a>
+        </div>
+        <div class="hero-stats animate delay-4">
+          <div class="hero-stat">
+            <div class="hero-stat-value">100%</div>
+            <div class="hero-stat-label">Conforme</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-value">Offline</div>
+            <div class="hero-stat-label">Mode terrain</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-value">PDF</div>
+            <div class="hero-stat-label">Export automatique</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Fonctionnalités</span>
+        <h2 class="section-title">Tout ce dont vous avez besoin sur le terrain</h2>
+        <p class="section-subtitle">
+          Une solution pensée pour les professionnels du contrôle technique et de la maintenance industrielle.
+        </p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon blue">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
+          </div>
+          <h3 class="feature-title">Conformité réglementaire</h3>
+          <p class="feature-desc">Rapports conformes aux exigences légales. Traçabilité complète des contrôles VGP de votre parc machines.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon green">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
+          </div>
+          <h3 class="feature-title">Synchronisation intelligente</h3>
+          <p class="feature-desc">Travaillez hors ligne sur le terrain. Vos données se synchronisent automatiquement dès la connexion rétablie.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon lime">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>
+          </div>
+          <h3 class="feature-title">Rapports PDF automatiques</h3>
+          <p class="feature-desc">Générez des rapports professionnels en un clic. Export PDF prêt à envoyer à vos clients.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon amber">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
+          </div>
+          <h3 class="feature-title">Planning intégré</h3>
+          <p class="feature-desc">Planifiez vos interventions et ne manquez plus aucune échéance. Alertes automatiques sur les VGP à venir.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon red">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+          </div>
+          <h3 class="feature-title">Alertes proactives</h3>
+          <p class="feature-desc">Recevez des notifications avant l'échéance des VGP. Anticipez les contrôles, évitez les pénalités.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon blue">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3 class="feature-title">Gestion multi-clients</h3>
+          <p class="feature-desc">Gérez plusieurs clients et parcs machines depuis une seule interface. Accès différenciés par rôle.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Platform Section -->
+  <section class="platform" id="platforms">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Accès</span>
+        <h2 class="section-title">Accédez à VGP Manager</h2>
+        <p class="section-subtitle">
+          Choisissez la plateforme qui correspond à votre usage. 
+          Application web pour le bureau, mobile pour le terrain.
+        </p>
+      </div>
+      <div class="platform-grid">
+        <div class="platform-card featured">
+          <div class="platform-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+          </div>
+          <span class="platform-status">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Disponible
+          </span>
+          <h3 class="platform-title">Application Web</h3>
+          <p class="platform-desc">Accès complet depuis n'importe quel navigateur. Idéal pour la gestion administrative et les rapports.</p>
+          <a href="https://app.in-spectra.com" class="btn btn-accent btn-lg" style="width: 100%;">
+            Accéder à l'application
+          </a>
+        </div>
+        <div class="platform-card">
+          <div class="platform-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+          </div>
+          <span class="platform-status">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Disponible
+          </span>
+          <h3 class="platform-title">Android</h3>
+          <p class="platform-desc">Application native optimisée pour le terrain. Mode hors ligne, scan de plaques, photos intégrées.</p>
+          <a href="#" class="btn btn-primary btn-lg" style="width: 100%;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            Télécharger l'APK
+          </a>
+        </div>
+        <div class="platform-card">
+          <div class="platform-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"/><path d="M10 2c1 .5 2 2 2 5"/></svg>
+          </div>
+          <span class="platform-status coming">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Prochainement
+          </span>
+          <h3 class="platform-title">iOS</h3>
+          <p class="platform-desc">Version iPhone et iPad en cours de validation sur l'App Store. Disponible très prochainement.</p>
+          <button class="btn btn-secondary btn-lg" style="width: 100%;" disabled>
+            Bientôt sur App Store
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Section -->
+  <section class="trust">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label" style="color: var(--accent);">Fiabilité</span>
+        <h2 class="section-title">Conçu pour les professionnels du terrain</h2>
+        <p class="section-subtitle">
+          Une solution robuste qui s'adapte aux conditions réelles d'utilisation.
+        </p>
+      </div>
+      <div class="trust-grid">
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+          </div>
+          <h4 class="trust-title">Données sécurisées</h4>
+          <p class="trust-desc">Hébergement sécurisé, chiffrement des données, sauvegardes automatiques quotidiennes.</p>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h.01"/><path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/><path d="M22 4v16"/></svg>
+          </div>
+          <h4 class="trust-title">Mode hors ligne</h4>
+          <p class="trust-desc">Travaillez sans connexion. L'application fonctionne à 100% même sans réseau.</p>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
+          </div>
+          <h4 class="trust-title">Sync automatique</h4>
+          <p class="trust-desc">Vos données se synchronisent automatiquement entre tous vos appareils.</p>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          </div>
+          <h4 class="trust-title">Support réactif</h4>
+          <p class="trust-desc">Une équipe dédiée pour vous accompagner dans l'utilisation de la solution.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <div class="container">
+      <div class="cta-box">
+        <h2 class="cta-title">Prêt à simplifier vos VGP ?</h2>
+        <p class="cta-subtitle">Accédez dès maintenant à VGP Manager et gagnez du temps sur vos contrôles.</p>
+        <div class="cta-buttons">
+          <a href="https://app.in-spectra.com" class="btn btn-primary btn-lg">
+            Accéder à l'application
+          </a>
+          <a href="mailto:contact@in-spectra.com" class="btn btn-outline btn-lg">
+            Nous contacter
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <img src="https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/1ax0vz9j4kid8s8ic3tbi" alt="Groupe ADF" class="footer-logo">
+          <p class="footer-desc">
+            VGP Manager - Solution professionnelle de gestion des Vérifications Générales Périodiques pour les entreprises.
+          </p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-col">
+            <h4>Produit</h4>
+            <ul>
+              <li><a href="#features">Fonctionnalités</a></li>
+              <li><a href="#platforms">Télécharger</a></li>
+              <li><a href="https://app.in-spectra.com">Application web</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Support</h4>
+            <ul>
+              <li><a href="mailto:contact@in-spectra.com">Contact</a></li>
+              <li><a href="mailto:support@in-spectra.com">Assistance</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copyright">&copy; 2025 Groupe ADF. Tous droits réservés.</p>
+        <div class="footer-legal">
+          <a href="/mentions-legales">Mentions légales</a>
+          <a href="/confidentialite">Politique de confidentialité</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Header scroll effect
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Animation on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = 'running';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.animate').forEach(el => {
+      el.style.animationPlayState = 'paused';
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
