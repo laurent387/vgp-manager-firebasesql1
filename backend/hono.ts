@@ -83,11 +83,13 @@ app.get("/api/ping", (c) => {
 
 app.get("/health", async (c) => {
   try {
-    const { pool } = await import('./db');
-    const connection = await pool.getConnection();
-    await connection.ping();
-    connection.release();
-    return c.json({ status: "ok", database: "connected", timestamp: new Date().toISOString() });
+    const { healthCheck } = await import('./db');
+    const isHealthy = await healthCheck();
+    if (isHealthy) {
+      return c.json({ status: "ok", database: "connected", timestamp: new Date().toISOString() });
+    } else {
+      return c.json({ status: "error", database: "disconnected" }, 500);
+    }
   } catch (error) {
     console.error('[Health] Database error:', error);
     return c.json({ status: "error", database: "disconnected", error: (error as Error).message }, 500);
@@ -96,11 +98,13 @@ app.get("/health", async (c) => {
 
 app.get("/api/health", async (c) => {
   try {
-    const { pool } = await import('./db');
-    const connection = await pool.getConnection();
-    await connection.ping();
-    connection.release();
-    return c.json({ status: "ok", database: "connected", timestamp: new Date().toISOString() });
+    const { healthCheck } = await import('./db');
+    const isHealthy = await healthCheck();
+    if (isHealthy) {
+      return c.json({ status: "ok", database: "connected", timestamp: new Date().toISOString() });
+    } else {
+      return c.json({ status: "error", database: "disconnected" }, 500);
+    }
   } catch (error) {
     console.error('[Health] Database error:', error);
     return c.json({ status: "error", database: "disconnected", error: (error as Error).message }, 500);
