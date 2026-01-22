@@ -19,7 +19,7 @@ const getBaseUrl = () => {
     return rorkUrl;
   }
 
-  if (__DEV__) {
+  if (process.env.NODE_ENV !== 'production') {
     console.log('[tRPC] Using localhost');
     return 'http://localhost:3000';
   }
