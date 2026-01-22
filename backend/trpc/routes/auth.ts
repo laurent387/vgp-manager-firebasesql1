@@ -35,8 +35,17 @@ export const authRouter = createTRPCRouter({
         );
         console.log('[AUTH] Query result:', { found: result.rows.length > 0 });
       } catch (dbError: any) {
-        console.error('[AUTH] Database error during login:', dbError.message);
-        throw new Error('Erreur de connexion à la base de données');
+        console.error('[AUTH] Database error during login:', {
+          message: dbError.message,
+          code: dbError.code,
+          errno: dbError.errno,
+        });
+        
+        if (dbError.code === 'ENOTFOUND' || dbError.code === 'ECONNREFUSED') {
+          throw new Error('Base de données inaccessible. Contactez l\'administrateur.');
+        }
+        
+        throw new Error('Erreur de connexion à la base de données: ' + dbError.message);
       }
 
       if (result.rows.length === 0) {

@@ -14,8 +14,8 @@ export interface DatabaseConfig {
 
 export function getDatabaseConfig(): DatabaseConfig {
   const enableSsl = process.env.DB_SSL === 'true';
-
-  return {
+  
+  const config = {
     host: process.env.DB_HOST || 'localhost',
     port: parseInt(process.env.DB_PORT || '3306', 10),
     database: process.env.DB_NAME || 'vgp',
@@ -26,6 +26,17 @@ export function getDatabaseConfig(): DatabaseConfig {
       rejectUnauthorized: false,
     } : undefined,
   };
+  
+  console.log('[DB] Database config loaded:', {
+    host: config.host,
+    port: config.port,
+    database: config.database,
+    user: config.user,
+    hasPassword: !!config.password,
+    ssl: !!config.ssl,
+  });
+  
+  return config;
 }
 
 let pool: Pool | null = null;

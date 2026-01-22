@@ -19,13 +19,8 @@ const getBaseUrl = () => {
     return rorkUrl;
   }
 
-  if (process.env.NODE_ENV !== 'production') {
-    console.log('[tRPC] Using localhost');
-    return 'http://localhost:3000';
-  }
-
-  console.log('[tRPC] Using production API URL: https://api.in-spectra.com');
-  return 'https://api.in-spectra.com';
+  console.log('[tRPC] No API URL found, using relative path');
+  return '';
 };
 
 const baseUrl = getBaseUrl();
