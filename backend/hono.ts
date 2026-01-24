@@ -16,6 +16,8 @@ const getAllowedOrigins = (): string[] => {
     return [
       'https://in-spectra.com',
       'https://www.in-spectra.com',
+      'https://app.in-spectra.com',
+      'https://api.in-spectra.com',
     ];
   }
   return ['http://localhost:8081', 'http://localhost:3000', 'http://localhost:19006'];
